@@ -101,8 +101,20 @@ async def send_question(chat_id: int, q_num: int):
         return
 
     question = QUESTIONS[q_num - 1]
-    text = f"**Вопрос {q_num}/{len(QUESTIONS)}:**\n\n{question['question']}"
-    await bot.send_message(chat_id, text, reply_markup=get_answer_keyboard(q_num), parse_mode="Markdown")
+    options_text = "\n".join(question["options"])
+
+    text = (
+        f"**Вопрос {q_num}/{len(QUESTIONS)}**\n\n"
+        f"{question['question']}\n\n"
+        f"{options_text}"
+    )
+
+    await bot.send_message(
+        chat_id,
+        text,
+        reply_markup=get_answer_keyboard(q_num),
+        parse_mode="Markdown"
+    )
 
 @dp.callback_query(F.data.startswith("answer:"))
 async def handle_answer(callback: types.CallbackQuery):
